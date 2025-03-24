@@ -22,16 +22,8 @@ class AttachmentUploadObserver implements ObserverInterface
 
     public function run($metadata, $attachment_id)
     {
-        // Allow other integrations to control whether this attachment should be offloaded now
-        $should_offload = apply_filters('advmo_should_offload_attachment', true, $attachment_id);
-        
-        if ($should_offload) {
-            if (!$this->cloudAttachmentUploader->uploadAttachment($attachment_id)) {
-                wp_delete_attachment($attachment_id, true);
-            }
-        } else {
-            // Log for debugging that offloading is being delayed
-            error_log("Advanced Media Offloader: Offloading delayed for attachment {$attachment_id} - waiting for another process");
+        if (!$this->cloudAttachmentUploader->uploadAttachment($attachment_id)) {
+            wp_delete_attachment($attachment_id, true);
         }
 
         return $metadata;

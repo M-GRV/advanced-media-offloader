@@ -193,7 +193,7 @@ class GeneralSettings
 		echo '<div class="advmo-checkbox-option">';
 		echo '<input type="checkbox" id="path_prefix_active" name="advmo_settings[path_prefix_active]" value="1" ' . checked(1, $path_prefix_Active, false) . '/>';
 		echo '<label for="path_prefix_active">' . esc_html__('Use Custom Path Prefix', 'advanced-media-offloader') . '</label>';
-		echo '<p class="description">' . '<input type="input" id="path_prefix" name="advmo_settings[path_prefix]" value="' . esc_html($path_prefix) . '"' . ($path_prefix_Active ? '' : ' disabled') . '/>'  . '</p>';
+		echo '<p class="description">' . '<input type="text" id="path_prefix" name="advmo_settings[path_prefix]" value="' . esc_html($path_prefix) . '"' . ($path_prefix_Active ? '' : ' disabled') . '/>'  . '</p>';
 		echo '<p class="description">' . esc_html__('Add a common prefix to organize offloaded media files from this site in your cloud storage bucket.', 'advanced-media-offloader') . '</p>';
 		echo '</div>';
 	}
@@ -475,6 +475,11 @@ class GeneralSettings
 
 
 		wp_enqueue_style('advmo_admin', ADVMO_URL . 'assets/css/admin.css', [], ADVMO_VERSION);
+
+		// Enqueue RTL styles if needed
+		if (is_rtl()) {
+			wp_enqueue_style('advmo_admin_rtl', ADVMO_URL . 'assets/css/admin-rtl.css', ['advmo_admin'], ADVMO_VERSION);
+		}
 	}
 
 	public function check_connection_ajax()

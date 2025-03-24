@@ -195,10 +195,10 @@ class MediaOverview
         $nonce = wp_create_nonce('advmo_download_errors_csv');
         $download_url = admin_url('admin-ajax.php?action=advmo_download_errors_csv&nonce=' . $nonce);
 
-        $output = "<p>Number of attachments with errors: <strong>{$count}</strong></p>";
+        $output = "<p>" . __('Number of attachments with errors:', 'advanced-media-offloader') . " <strong>{$count}</strong></p>";
 
         if ($count > 0) {
-            $output .= "<p><a href='{$download_url}' class='button button-secondary'>Download Errors CSV</a></p>";
+            $output .= "<p><a href='{$download_url}' class='button button-secondary'>" . __('Download Errors CSV', 'advanced-media-offloader') . "</a></p>";
         }
 
         echo $output;

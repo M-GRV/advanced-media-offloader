@@ -449,3 +449,12 @@
 	font-weight: 500;
 	border-color: #1a325e;
 }
+
+.advmo-code-snippet {
+	direction: ltr;
+	text-align: left;
+	white-space: pre-wrap;
+	background: #f0f0f1;
+	padding: 10px;
+	border-radius: 3px;
+}

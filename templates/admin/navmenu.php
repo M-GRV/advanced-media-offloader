@@ -22,11 +22,11 @@ function advmo_get_admin_page_url(string $page): string
  */
 $menu_items = [
     'general' => [
-        'title' => 'General Settings',
+        'title' => __('General Settings', 'advanced-media-offloader'),
         'url' => advmo_get_admin_page_url('advmo'),
     ],
     'media-overview' => [
-        'title' => 'Media Overview',
+        'title' => __('Media Overview', 'advanced-media-offloader'),
         'url' => advmo_get_admin_page_url('advmo_media_overview'),
     ],
 ];

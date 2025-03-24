@@ -1,12 +1,12 @@
 <?php
 /*
- * Plugin Name:       Advanced Media Offloader Modified
+ * Plugin Name:       Advanced Media Offloader
  * Plugin URI:        https://wpfitter.com/plugins/advanced-media-offloader/
  * Description:       Offload WordPress media to Amazon S3, Cloudflare R2, DigitalOcean Spaces, Min.io or Wasabi.
- * Version:           3.3.1
+ * Version:           3.3.2
  * Requires at least: 5.6
  * Requires PHP:      8.1
- * Author:            WP Fitter | ruffi0
+ * Author:            WP Fitter
  * Author URI:        https://wpfitter.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,13 +34,6 @@ if (!class_exists('ADVMO')) {
 		 * @var string
 		 */
 		public $version;
-
-		/**
-		 * The plugin settings array.
-		 *
-		 * @var array
-		 */
-		public $settings = array();
 
 		/**
 		 * The offloader instance.
@@ -89,37 +82,6 @@ if (!class_exists('ADVMO')) {
 
 			// Register activation hook.
 			register_activation_hook(__FILE__, array($this, 'plugin_activated'));
-
-			// Define settings.
-			$this->settings = array(
-				'name'                    => __('Advanced Media Offloader', 'advanced-media-offloader'),
-				'description'             => __('Offload WordPress media to Amazon S3, DigitalOcean Spaces, Min.io or Cloudflare R2.', 'advanced-media-offloader'),
-				'slug'                    => dirname(ADVMO_BASENAME),
-				'version'                 => ADVMO_VERSION,
-				'basename'                => ADVMO_BASENAME,
-				'path'                    => ADVMO_PATH,
-				'file'                    => __FILE__,
-				'url'                     => plugin_dir_url(__FILE__),
-				'show_admin'              => true,
-				'show_updates'            => true,
-				'enable_post_types'       => true,
-				'enable_options_pages_ui' => true,
-				'stripslashes'            => false,
-				'local'                   => true,
-				'json'                    => true,
-				'save_json'               => '',
-				'load_json'               => array(),
-				'default_language'        => '',
-				'current_language'        => '',
-				'capability'              => 'manage_options',
-				'uploader'                => 'wp',
-				'autoload'                => false,
-				'offloader'               => '',
-			);
-
-			if (get_option('advmo_options') === false) {
-				update_option('advmo_options', $this->settings);
-			}
 
 			// Set up container
 			$this->setup_container();
@@ -176,20 +138,6 @@ if (!class_exists('ADVMO')) {
 
 			$this->container->register('bulk_offload_handler', function ($c) {
 				return \Advanced_Media_Offloader\BulkOffloadHandler::get_instance();
-			});
-
-			$this->container->register('watermark_integration', function ($c) {
-				if (!function_exists('is_plugin_active')) {
-					include_once(ABSPATH . 'wp-admin/includes/plugin.php');
-				}
-				
-				if (is_plugin_active('image-watermark/image-watermark.php')) {
-					if ($c->has('cloud_provider') && $c->get('cloud_provider') !== null) {
-						return new \Advanced_Media_Offloader\Integrations\WatermarkIntegration($c->get('cloud_provider'));
-					}
-				}
-				
-				return null;
 			});
 		}
 

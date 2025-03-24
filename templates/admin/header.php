@@ -27,7 +27,7 @@
                     </clipPath>
                 </defs>
             </svg>
-            Support
+            <?php _e('Support', 'advanced-media-offloader'); ?>
         </a>
     </div>
 

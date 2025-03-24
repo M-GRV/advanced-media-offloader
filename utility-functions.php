@@ -19,61 +19,6 @@ if (!function_exists('advmo_get_view')) {
 }
 
 /**
- * Get a plugin option value.
- *
- * @param string $option The option name.
- * @param mixed $default The default value if the option is not set.
- * @return mixed The option value or default.
- */
-if (!function_exists('advmo_get_option')) {
-	function advmo_get_option(string $option, $default = '')
-	{
-		$options = get_option('advmo_options');
-		if (is_array($options) && isset($options[$option])) {
-			return $options[$option];
-		}
-		return $default;
-	}
-}
-
-/**
- * Update a plugin option value.
- *
- * @param string $option The option name.
- * @param mixed $value The new value for the option.
- * @return void
- */
-if (!function_exists('advmo_update_option')) {
-	function advmo_update_option(string $option, $value): void
-	{
-		$options = get_option('advmo_options');
-		if (!is_array($options)) {
-			$options = [];
-		}
-		$options[$option] = $value;
-		update_option('advmo_options', $options);
-	}
-}
-
-/**
- * Delete a plugin option.
- *
- * @param string $option The option name to delete.
- * @return void
- */
-
-if (!function_exists('advmo_delete_opion')) {
-	function advmo_delete_option(string $option): void
-	{
-		$options = get_option('advmo_options');
-		if (is_array($options) && isset($options[$option])) {
-			unset($options[$option]);
-		}
-		update_option('advmo_options', $options);
-	}
-}
-
-/**
  * Debug function to var_dump a variable.
  *
  * @param mixed $var The variable to dump.
@@ -102,26 +47,27 @@ if (!function_exists('advmo_is_settings_page')) {
 			return false;
 		}
 
-		$ADVMO_GENERAL_PAGE = 'toplevel_page_advmo';
-		$ADVMO_MEDIA_OVERVIEW_PAGE = 'media-offloader_page_advmo_media_overview';
+		// Get the current page from the query string
+		$current_page = isset($_GET['page']) ? sanitize_text_field($_GET['page']) : '';
 
+		// Define our plugin pages
 		$plugin_pages = [
-			$ADVMO_GENERAL_PAGE,    // Main settings page
-			$ADVMO_MEDIA_OVERVIEW_PAGE  // Submenu page
+			'general' => 'advmo',
+			'media-overview' => 'advmo_media_overview'
 		];
 
+		// If a specific page is requested
 		if (!empty($page_name)) {
-			switch ($page_name) {
-				case 'general':
-					return $current_screen->id === $ADVMO_GENERAL_PAGE;
-				case 'media-overview':
-					return $current_screen->id === $ADVMO_MEDIA_OVERVIEW_PAGE;
-				default:
-					return false; // Invalid page name provided
+			if (!isset($plugin_pages[$page_name])) {
+				return false; // Invalid page name provided
 			}
+
+			// Check if the current page matches the requested page
+			return $current_page === $plugin_pages[$page_name];
 		}
 
-		return in_array($current_screen->id, $plugin_pages);
+		// Check if we're on any plugin page
+		return in_array($current_page, array_values($plugin_pages));
 	}
 }
 

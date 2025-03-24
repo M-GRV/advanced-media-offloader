@@ -13,8 +13,6 @@ if (!defined('ABSPATH')) {
 if (!current_user_can('manage_options')) {
 	return;
 }
-
-$options = get_option('advmo_options');
 ?>
 <div id="advmo">
 	<div class="wrap">

@@ -97,40 +97,40 @@ abstract class S3_Provider
 		return get_option('advmo_last_connection_check', '');
 	}
 
-	public function TestConnectionHTMLButton() 
+	public function TestConnectionHTMLButton()
 	{
 		$last_check = $this->getLastCheckTime();
 		$is_connected = $this->checkConnection();
-		
+
 		$button_text = empty($last_check) ?
 			esc_html__('Test Connection', 'advanced-media-offloader') :
 			esc_html__('Re-Check', 'advanced-media-offloader');
-		
+
 		$html = '<div class="advmo-test-connection-container">';
-		
-			if (!empty($last_check)) {
-				$status_text = $is_connected ? 
-				esc_html__('Connected.', 'advanced-media-offloader') : 
+
+		if (!empty($last_check)) {
+			$status_text = $is_connected ?
+				esc_html__('Connected.', 'advanced-media-offloader') :
 				esc_html__('Disconnected.', 'advanced-media-offloader');
 
 			$html .= sprintf(
-					'<p class="advmo-last-check %s">%s %s</p>',
-					$is_connected ? 'connected' : 'disconnected',
-					$status_text,
+				'<p class="advmo-last-check %s">%s %s</p>',
+				$is_connected ? 'connected' : 'disconnected',
+				$status_text,
 				sprintf(
 					esc_html__('Last check: %s', 'advanced-media-offloader'),
 					esc_html($last_check)
 				)
 			);
 		}
-		
+
 		$html .= sprintf(
 			'<button class="button advmo_js_test_connection">%s</button>',
 			esc_html($button_text)
 		);
-		
+
 		$html .= '</div>'; // Close advmo-test-connection-container
-		
+
 		return $html;
 	}
 
@@ -155,17 +155,24 @@ abstract class S3_Provider
 			$section_title = esc_html__('Missing Credentials Setup', 'advanced-media-offloader');
 			$section_description = sprintf(esc_html__('To enable cloud storage integration, you need to define the following constants in your %s file. Make sure to replace the placeholders with your actual credentials.', 'advanced-media-offloader'), '<code>wp-config.php</code>');
 			$constantsCode = $this->getConstantCodes($missingConstants);
+
 			$security_note = sprintf(
-				"%s We recommend using the %s file for enhanced security. This ensures your sensitive credentials are not exposed within the WordPress admin interface.",
-				"<strong>Note:</strong>",
+				esc_html__('%s We recommend using the %s file for enhanced security. This ensures your sensitive credentials are not exposed within the WordPress admin interface.', 'advanced-media-offloader'),
+				"<strong>" . esc_html__('Note:', 'advanced-media-offloader') . "</strong>",
 				"<code>wp-config.php</code>"
 			);
+
+			// Add note about domain/endpoint URLs
+			$url_note = "<strong>" . esc_html__('Important:', 'advanced-media-offloader') . "</strong> " .
+				sprintf(esc_html__('All domain and endpoint URLs must include the %s protocol.', 'advanced-media-offloader'), '<code>https://</code>');
+
 			$html .= <<<HTML
-				<div class="advmo-missing-constants">{$html}
+				<div class="advmo-missing-constants">
 				<h3>{$section_title}</h3>
 				<p>{$section_description}</p>
 				<pre class="advmo-code-snippet">{$constantsCode}</pre>
 				<p>{$security_note}</p>
+				<p class="advmo-url-format-note notice notice-info">{$url_note}</p>
 				</div>
 			HTML;
 		} else {
