@@ -1,12 +1,12 @@
 <?php
 /*
- * Plugin Name:       Advanced Media Offloader
+ * Plugin Name:       Advanced Media Offloader Modified
  * Plugin URI:        https://wpfitter.com/plugins/advanced-media-offloader/
  * Description:       Offload WordPress media to Amazon S3, Cloudflare R2, DigitalOcean Spaces, Min.io or Wasabi.
  * Version:           3.3.1
  * Requires at least: 5.6
  * Requires PHP:      8.1
- * Author:            WP Fitter
+ * Author:            WP Fitter | ruffi0
  * Author URI:        https://wpfitter.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -176,6 +176,20 @@ if (!class_exists('ADVMO')) {
 
 			$this->container->register('bulk_offload_handler', function ($c) {
 				return \Advanced_Media_Offloader\BulkOffloadHandler::get_instance();
+			});
+
+			$this->container->register('watermark_integration', function ($c) {
+				if (!function_exists('is_plugin_active')) {
+					include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+				}
+				
+				if (is_plugin_active('image-watermark/image-watermark.php')) {
+					if ($c->has('cloud_provider') && $c->get('cloud_provider') !== null) {
+						return new \Advanced_Media_Offloader\Integrations\WatermarkIntegration($c->get('cloud_provider'));
+					}
+				}
+				
+				return null;
 			});
 		}
 
